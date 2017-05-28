@@ -8,3 +8,5 @@ Cellular-Automaton,A Simple Cell Game with Vue.js.
 ![示例动画](1.gif)
 
 > 接下来要优化的，修复bug。更新Vue2.0
+>
+> 最近的任务还会把这个项目利用koa2进行重写。
