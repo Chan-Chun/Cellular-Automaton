@@ -1,0 +1,19 @@
+{
+  "name": "cellular_automaton",
+  "version": "2.0.0",
+  "description": "Cellular-Automaton,A Simple Cell Game with Vue.js.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Chan-Chun/Cellular-Automaton.git"
+  },
+  "author": "Chan-Chun",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Chan-Chun/Cellular-Automaton/issues"
+  },
+  "homepage": "https://github.com/Chan-Chun/Cellular-Automaton#readme"
+}
