@@ -20,9 +20,7 @@ app.use(json())
 app.use(logger())
 app.use(require('koa-static')(__dirname + '/public'))
 
-app.use(views(__dirname + '/views', {
-  extension: 'pug'
-}))
+app.use(views(__dirname + '/views'))
 
 // logger
 app.use(async (ctx, next) => {

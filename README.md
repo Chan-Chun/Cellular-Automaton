@@ -5,7 +5,7 @@ Cellular-Automaton,A Simple Cell Game with Vue.js.
 
 > Vue.js 1.0
 
-![示例动画](1.gif)
+![示例动画](./static/images/1.gif)
 
 > 接下来要优化的，修复bug。更新Vue2.0
 >

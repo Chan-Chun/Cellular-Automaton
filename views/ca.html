@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title> CA </title>
+</head>
+
+<body>
+
+    <style>
+        #app {
+            min-width: 800px;
+        }
+        
+        .cell {
+            background-color: darkgoldenrod;
+        }
+        
+        .nocell {
+            background-color: lightgrey;
+        }
+        
+        .divStyle {
+            width: 14px;
+            height: 14px;
+            margin: 0.5px;
+            float: left;
+        }
+        
+        .list {
+            clear: both;
+        }
+        
+        .activeButton {
+            background-color: brown;
+        }
+    </style>
+    <div id="app">
+        <h1>Cellular automaton</h1>
+        <div class="list" v-for="(row, i) in map">
+            <div class="divStyle" v-for="(item, j) in row" v-if="i!==0 && i !== map.length-1 &&j!==0&&j!==row.length-1" @click="toggle(i, j)" v-bind:class="selectColor(item)"></div>
+        </div>
+        <button v-on:click="startAndPauseCA()" v-bind:class="activeButton()">startAndPause</button>
+        <button v-on:click="saveYourCA()">saveYourCA</button>
+        <input type="file" onchange="fileSelect(event)">
+        <input v-model="speed" type="range" max="10" min="1">speed:{{speed}}</input>
+    </div>
+
+
+    <script src="javascripts/vue.js"></script>
+    <script>
+
+        function nextStep(map) {
+            let new_map = Array(52).fill(Array(52).fill(0)).map((i) => i.map((j) => 0));
+            let countAlive = 0;
+            for (let i = 1; i < 51; i++) {
+                for (let j = 1; j < 51; j++) {
+                    countAlive = map[i + 1][j] + map[i - 1][j] + map[i][j + 1] + map[i][j - 1] + map[i + 1][j + 1] + map[i + 1][j - 1] + map[i - 1][j + 1] + map[i - 1][j - 1];
+                    if (map[i][j] === 0 && countAlive < 3) {
+                        new_map[i][j] = 0;
+                    }
+                    if (map[i][j] === 1 && 2 <= countAlive && countAlive <= 3) {
+                        new_map[i][j] = 1;
+
+                    }
+                    if (map[i][j] === 1 && (countAlive > 3 || countAlive < 2)) {
+                        new_map[i][j] = 0;
+                    }
+                    if (map[i][j] == 0 && countAlive === 3) {
+                        new_map[i][j] = 1;
+                    }
+                    countAlive = 0;
+                }
+            }
+            console.log(new_map);
+            return new_map;
+        }
+
+        const vm = new Vue({
+            el: '#app',
+            data: {
+                map: Array(52).fill(Array(52).fill(0)).map((i) => i.map((j) => 0)),
+                speed: 1,
+                time: null,
+                isRunning: false
+            },
+            methods: {
+                toggle(i, j) {
+                    this.setIndex(i, j, this.map[i][j] ? 0 : 1);
+                },
+                setIndex(i, j, v) {
+                    this.$set(this.map[i], j, v);
+                },
+                selectColor(item) {
+                    switch (item) {
+                        case 0:
+                            return 'nocell';
+                            break;
+                        case 1:
+                            return 'cell';
+                            break;
+                    }
+                },
+                startAndPauseCA() {
+                    const _this = this;
+                    _this.isRunning = !this.isRunning;
+                    _this.time = setTimeout(function() {
+                        _this.map = nextStep(_this.map)
+                        if (_this.isRunning) {
+                            setTimeout(arguments.callee, (1 / _this.speed) * 500)
+                        } else if (!_this.isRunning) {
+                            clearInterval(this.time);
+                        }
+                    }, (1 / _this.speed) * 500);
+                },
+                activeButton() {
+                    switch (this.isRunning) {
+                        case true:
+                            return 'activeButton';
+                            break;
+                        case false:
+                            return '';
+                            break;
+                    }
+                },
+                saveYourCA() {
+                    download(JSON.stringify(this.map), 'myCA.txt', "text/javascript");
+                }
+            }
+        });
+
+        function download(data, filename, type) {
+            const a = document.createElement("a"),
+                file = new Blob([data], {
+                    type: type
+                });
+            if (window.navigator.msSaveOrOpenBlob) // IE10+
+                window.navigator.msSaveOrOpenBlob(file, filename);
+            else { // Others
+                let url = URL.createObjectURL(file);
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(function() {
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                }, 0);
+            }
+        }
+
+        function fileSelect(e) {
+            let input = e.target;
+
+            let reader = new FileReader();
+            reader.onload = function() {
+                let text = reader.result;
+                vm.map = JSON.parse(text);
+                console.log(reader.result.substring(0, 200));
+            };
+            reader.readAsText(input.files[0]);
+        }
+    </script>
+</body>
+
+</html>
