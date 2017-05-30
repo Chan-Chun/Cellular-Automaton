@@ -1,0 +1,28 @@
+#app {
+    min-width: 800px;
+    width: 800px;
+    margin: 0 auto;
+}
+
+.cell {
+    background-color: darkgoldenrod;
+}
+
+.nocell {
+    background-color: lightgrey;
+}
+
+.divStyle {
+    width: 14px;
+    height: 14px;
+    margin: 0.5px;
+    float: left;
+}
+
+.list {
+    clear: both;
+}
+
+.activeButton {
+    background-color: brown;
+}

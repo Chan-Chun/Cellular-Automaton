@@ -3,59 +3,30 @@
 
 <head>
     <meta charset="UTF-8">
-    <title> CA </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cellular automaton</title>
+    <link href="stylesheets/style.css" rel="stylesheet">
 </head>
 
 <body>
-
-    <style>
-        #app {
-            min-width: 800px;
-        }
-        
-        .cell {
-            background-color: darkgoldenrod;
-        }
-        
-        .nocell {
-            background-color: lightgrey;
-        }
-        
-        .divStyle {
-            width: 14px;
-            height: 14px;
-            margin: 0.5px;
-            float: left;
-        }
-        
-        .list {
-            clear: both;
-        }
-        
-        .activeButton {
-            background-color: brown;
-        }
-    </style>
     <div id="app">
         <h1>Cellular automaton</h1>
         <div class="list" v-for="(row, i) in map">
-            <div class="divStyle" v-for="(item, j) in row" v-if="i!==0 && i !== map.length-1 &&j!==0&&j!==row.length-1" @click="toggle(i, j)" v-bind:class="selectColor(item)"></div>
+            <div class="divStyle" v-for="(item, j) in row" v-if="judgeArray.indexOf(i)==-1 && judgeArray.indexOf(j)==-1" @click="toggle(i, j)" v-bind:class="selectColor(item)"></div>
         </div>
-        <button v-on:click="startAndPauseCA()" v-bind:class="activeButton()">startAndPause</button>
-        <button v-on:click="saveYourCA()">saveYourCA</button>
+        <button v-on:click="startAndPauseCA()" v-bind:class="activeButton()">StartAndPause</button>
+        <button v-on:click="saveYourCA()">SaveYourCA</button>
         <input type="file" onchange="fileSelect(event)">
-        <input v-model="speed" type="range" max="10" min="1">speed:{{speed}}</input>
+        <input v-model="speed" type="range" max="10" min="1">Speed:{{speed}}</input>
     </div>
-
 
     <script src="javascripts/vue.js"></script>
     <script>
-
         function nextStep(map) {
-            let new_map = Array(52).fill(Array(52).fill(0)).map((i) => i.map((j) => 0));
+            let new_map = Array(60).fill(Array(60).fill(0)).map((i) => i.map((j) => 0));
             let countAlive = 0;
-            for (let i = 1; i < 51; i++) {
-                for (let j = 1; j < 51; j++) {
+            for (let i = 5; i < 55; i++) {
+                for (let j = 5; j < 55; j++) {
                     countAlive = map[i + 1][j] + map[i - 1][j] + map[i][j + 1] + map[i][j - 1] + map[i + 1][j + 1] + map[i + 1][j - 1] + map[i - 1][j + 1] + map[i - 1][j - 1];
                     if (map[i][j] === 0 && countAlive < 3) {
                         new_map[i][j] = 0;
@@ -73,21 +44,29 @@
                     countAlive = 0;
                 }
             }
-            console.log(new_map);
             return new_map;
         }
 
         const vm = new Vue({
             el: '#app',
             data: {
-                map: Array(52).fill(Array(52).fill(0)).map((i) => i.map((j) => 0)),
+                map: Array(60).fill(Array(60).fill(0)).map((i) => i.map((j) => 0)),
                 speed: 1,
                 time: null,
-                isRunning: false
+                isRunning: false,
+            },
+            computed: {
+                judgeArray: function() {
+                    return Array.from(new Array(5), (item, index) => index).concat(Array.from(new Array(5), (item, index) => this.map.length - index).reverse())
+                }
             },
             methods: {
                 toggle(i, j) {
-                    this.setIndex(i, j, this.map[i][j] ? 0 : 1);
+                    if (this.isRunning) {
+                        alert("Please stop first")
+                    } else {
+                        this.setIndex(i, j, this.map[i][j] ? 0 : 1);
+                    }
                 },
                 setIndex(i, j, v) {
                     this.$set(this.map[i], j, v);
