@@ -5,7 +5,7 @@ Cellular-Automaton,A Simple Cell Game with Vue.js and koa2.
 
 > Vue.js 2.0
 
-*来试试把* [传送门](http://ca.chanchun.com.cn/)
+**来试试把** [传送门](http://ca.chanchun.com.cn/)
 
 ![示例动画](./public/images/readme.gif)
 
