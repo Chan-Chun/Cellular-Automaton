@@ -1,6 +1,6 @@
 {
   "name": "cellular_automaton",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "private": true,
   "description": "Cellular-Automaton,A Simple Cell Game with Vue.js and Koa2.",
   "main": "app.js",
