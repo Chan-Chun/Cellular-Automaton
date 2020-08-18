@@ -39,7 +39,7 @@
                     if (map[i][j] === 1 && (countAlive > 3 || countAlive < 2)) {
                         new_map[i][j] = 0;
                     }
-                    if (map[i][j] == 0 && countAlive === 3) {
+                    if (map[i][j] === 0 && countAlive === 3) {
                         new_map[i][j] = 1;
                     }
                     countAlive = 0;
