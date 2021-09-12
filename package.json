@@ -28,7 +28,7 @@
     "pug": "^3.0.2"
   },
   "devDependencies": {
-    "nodemon": "^1.8.1"
+    "nodemon": "^2.0.12"
   },
   "author": "Chan-Chun",
   "license": "MIT",
