@@ -25,7 +25,7 @@
     "koa-router": "^7.1.1",
     "koa-static": "^3.0.0",
     "koa-views": "^5.2.1",
-    "pug": "^2.0.0-rc.1"
+    "pug": "^3.0.2"
   },
   "devDependencies": {
     "nodemon": "^1.8.1"
