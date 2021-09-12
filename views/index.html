@@ -2,146 +2,193 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Cellular automaton</title>
-    <link href="stylesheets/style.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cellular Automaton</title>
+  <link href="stylesheets/style.css" rel="stylesheet">
 </head>
 
 <body>
-    <a href="https://github.com/Chan-Chun/Cellular-Automaton" class="github-corner" aria-label="View source on Github"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
-    <div id="app">
-        <h1>Cellular automaton</h1>
-        <div class="list" v-for="(row, i) in map">
-            <div class="divStyle" v-for="(item, j) in row" v-if="judgeArray.indexOf(i)==-1 && judgeArray.indexOf(j)==-1" @click="toggle(i, j)" v-bind:class="selectColor(item)"></div>
-        </div>
-        <button v-on:click="startAndPauseCA()" v-bind:class="activeButton()">StartAndPause</button>
-        <button v-on:click="saveYourCA()">SaveYourCA</button>
-        <input type="file" onchange="fileSelect(event)">
-        <input v-model="speed" type="range" max="10" min="1">Speed:{{speed}}</input>
+  <a href="https://github.com/Chan-Chun/Cellular-Automaton" class="github-corner" aria-label="View source on Github">
+    <svg width="80" height="80" viewBox="0 0 250 250"
+      style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true">
+      <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+      <path
+        d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+        fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm">
+      </path>
+      <path
+        d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+        fill="currentColor" class="octo-body">
+      </path>
+    </svg>
+  </a>
+  <style>
+    .github-corner:hover .octo-arm {
+      animation: octocat-wave 560ms ease-in-out
+    }
+
+    @keyframes octocat-wave {
+
+      0%,
+      100% {
+        transform: rotate(0)
+      }
+
+      20%,
+      60% {
+        transform: rotate(-25deg)
+      }
+
+      40%,
+      80% {
+        transform: rotate(10deg)
+      }
+    }
+
+    @media (max-width:500px) {
+      .github-corner:hover .octo-arm {
+        animation: none
+      }
+
+      .github-corner .octo-arm {
+        animation: octocat-wave 560ms ease-in-out
+      }
+    }
+  </style>
+  <div id="app">
+    <h1>Cellular Automaton</h1>
+    <div class="list" v-for="(row, i) in map">
+      <div class="div-style" v-for="(item, j) in row" @click="toggle(i, j)" v-bind:class="selectColor(item)"></div>
     </div>
+    <button v-on:click="startAndPauseCA()" v-bind:class="activeButton()">Start And Pause</button>
+    <button v-on:click="saveYourCA()">Save Your CA</button>
+    <input type="file" onchange="fileSelect(event)">
+    <input v-model="speed" type="range" max="10" min="1">Speed: {{speed}}</input>
+  </div>
 
-    <script src="javascripts/vue.js"></script>
-    <script>
-        function nextStep(map) {
-            let new_map = Array(60).fill(Array(60).fill(0)).map((i) => i.map((j) => 0));
-            let countAlive = 0;
-            for (let i = 5; i < 55; i++) {
-                for (let j = 5; j < 55; j++) {
-                    countAlive = map[i + 1][j] + map[i - 1][j] + map[i][j + 1] + map[i][j - 1] + map[i + 1][j + 1] + map[i + 1][j - 1] + map[i - 1][j + 1] + map[i - 1][j - 1];
-                    if (map[i][j] === 0 && countAlive < 3) {
-                        new_map[i][j] = 0;
-                    }
-                    if (map[i][j] === 1 && 2 <= countAlive && countAlive <= 3) {
-                        new_map[i][j] = 1;
-
-                    }
-                    if (map[i][j] === 1 && (countAlive > 3 || countAlive < 2)) {
-                        new_map[i][j] = 0;
-                    }
-                    if (map[i][j] === 0 && countAlive === 3) {
-                        new_map[i][j] = 1;
-                    }
-                    countAlive = 0;
-                }
-            }
-            return new_map;
+  <script src="javascripts/vue.js"></script>
+  <script>
+    function getMap(i, j, map) {
+      if (i >= map.length || j >= map.length || i < 0 || j < 0) {
+        return 0;
+      }
+      return map[i][j];
+    }
+    function nextStep(map) {
+      let newMap = Array(map.length).fill(Array(map.length).fill(0)).map((i) => i.map((j) => 0));
+      let countAlive = 0;
+      for (let i = 0; i < map.length; i++) {
+        for (let j = 0; j < map.length; j++) {
+          countAlive =
+            getMap(i + 1, j, map) +
+            getMap(i - 1, j, map) +
+            getMap(i, j + 1, map) +
+            getMap(i, j - 1, map) +
+            getMap(i + 1, j + 1, map) +
+            getMap(i + 1, j - 1, map) +
+            getMap(i - 1, j + 1, map) +
+            getMap(i - 1, j - 1, map);
+          if (map[i][j] === 0 && countAlive < 3) {
+            newMap[i][j] = 0;
+          }
+          if (map[i][j] === 1 && 2 <= countAlive && countAlive <= 3) {
+            newMap[i][j] = 1;
+          }
+          if (map[i][j] === 1 && (countAlive > 3 || countAlive < 2)) {
+            newMap[i][j] = 0;
+          }
+          if (map[i][j] === 0 && countAlive === 3) {
+            newMap[i][j] = 1;
+          }
+          countAlive = 0;
         }
+      }
+      return newMap;
+    }
 
-        const vm = new Vue({
-            el: '#app',
-            data: {
-                map: Array(60).fill(Array(60).fill(0)).map((i) => i.map((j) => 0)),
-                speed: 1,
-                time: null,
-                isRunning: false,
-            },
-            computed: {
-                judgeArray: function() {
-                    return Array.from(new Array(5), (item, index) => index).concat(Array.from(new Array(5), (item, index) => this.map.length - index).reverse())
-                }
-            },
-            methods: {
-                toggle(i, j) {
-                    if (this.isRunning) {
-                        alert("Please stop first")
-                    } else {
-                        this.setIndex(i, j, this.map[i][j] ? 0 : 1);
-                    }
-                },
-                setIndex(i, j, v) {
-                    this.$set(this.map[i], j, v);
-                },
-                selectColor(item) {
-                    switch (item) {
-                        case 0:
-                            return 'nocell';
-                            break;
-                        case 1:
-                            return 'cell';
-                            break;
-                    }
-                },
-                startAndPauseCA() {
-                    const _this = this;
-                    _this.isRunning = !this.isRunning;
-                    _this.time = setTimeout(function() {
-                        if (_this.isRunning) {
-                            setTimeout(arguments.callee, (1 / _this.speed) * 500)
-                            _this.map = nextStep(_this.map)
-                        } else if (!_this.isRunning) {
-                            clearInterval(this.time);
-                        }
-                    }, (1 / _this.speed) * 500);
-                },
-                activeButton() {
-                    switch (this.isRunning) {
-                        case true:
-                            return 'activeButton';
-                            break;
-                        case false:
-                            return '';
-                            break;
-                    }
-                },
-                saveYourCA() {
-                    download(JSON.stringify(this.map), 'myCA.txt', "text/javascript");
-                }
+    const vm = new Vue({
+      el: '#app',
+      data: {
+        map: Array(50).fill(Array(50).fill(0)).map((i) => i.map((j) => 0)),
+        speed: 1,
+        time: null,
+        isRunning: false,
+      },
+      methods: {
+        toggle(i, j) {
+          if (this.isRunning) {
+            alert('Please stop first')
+          } else {
+            this.setIndex(i, j, this.map[i][j] ? 0 : 1);
+          }
+        },
+        setIndex(i, j, v) {
+          this.$set(this.map[i], j, v);
+        },
+        selectColor(item) {
+          switch (item) {
+            case 0:
+              return 'no-cell';
+              break;
+            case 1:
+              return 'cell';
+              break;
+          }
+        },
+        startAndPauseCA() {
+          const _this = this;
+          _this.isRunning = !this.isRunning;
+          _this.time = setTimeout(function () {
+            if (_this.isRunning) {
+              setTimeout(arguments.callee, (1 / _this.speed) * 500)
+              _this.map = nextStep(_this.map)
+            } else if (!_this.isRunning) {
+              clearInterval(this.time);
             }
+          }, (1 / _this.speed) * 500);
+        },
+        activeButton() {
+          return this.isRunning ? 'active-button' : ''
+        },
+        saveYourCA() {
+          download(JSON.stringify(this.map), 'ca.txt', 'text/javascript');
+        }
+      }
+    });
+
+    function download(data, filename, type) {
+      const a = document.createElement('a'),
+        file = new Blob([data], {
+          type: type
         });
+      if (window.navigator.msSaveOrOpenBlob) // IE10+
+        window.navigator.msSaveOrOpenBlob(file, filename);
+      else { // Others
+        let url = URL.createObjectURL(file);
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function () {
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+        }, 0);
+      }
+    }
 
-        function download(data, filename, type) {
-            const a = document.createElement("a"),
-                file = new Blob([data], {
-                    type: type
-                });
-            if (window.navigator.msSaveOrOpenBlob) // IE10+
-                window.navigator.msSaveOrOpenBlob(file, filename);
-            else { // Others
-                let url = URL.createObjectURL(file);
-                a.href = url;
-                a.download = filename;
-                document.body.appendChild(a);
-                a.click();
-                setTimeout(function() {
-                    document.body.removeChild(a);
-                    window.URL.revokeObjectURL(url);
-                }, 0);
-            }
-        }
+    function fileSelect(e) {
+      let input = e.target;
 
-        function fileSelect(e) {
-            let input = e.target;
-
-            let reader = new FileReader();
-            reader.onload = function() {
-                let text = reader.result;
-                vm.map = JSON.parse(text);
-                console.log(reader.result.substring(0, 200));
-            };
-            reader.readAsText(input.files[0]);
-        }
-    </script>
+      let reader = new FileReader();
+      reader.onload = function () {
+        let text = reader.result;
+        vm.map = JSON.parse(text);
+        console.log(reader.result.substring(0, 200));
+      };
+      reader.readAsText(input.files[0]);
+    }
+  </script>
 </body>
 
 </html>

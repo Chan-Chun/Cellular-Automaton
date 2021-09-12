@@ -8,11 +8,11 @@
     background-color: darkgoldenrod;
 }
 
-.nocell {
+.no-cell {
     background-color: lightgrey;
 }
 
-.divStyle {
+.div-style {
     width: 14px;
     height: 14px;
     margin: 0.5px;
@@ -23,6 +23,6 @@
     clear: both;
 }
 
-.activeButton {
+.active-button {
     background-color: brown;
 }
