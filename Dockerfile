@@ -4,8 +4,8 @@ FROM node:14-alpine
 # 安装依赖
 RUN apk add --no-cache nginx certbot && \
     mkdir -p /var/www/html && \
-    addgroup -S www-data && \
-    adduser -S -G www-data -D www-data && \
+    getent group www-data || addgroup -S www-data && \
+    getent passwd www-data || adduser -S -G www-data -D www-data && \
     chown -R www-data:www-data /var/www/html
 
 WORKDIR /app
