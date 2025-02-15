@@ -14,6 +14,9 @@ services:
     networks:
       - app-network
     user: "nginx:nginx"
+    entrypoint: >
+      sh -c "chown -R nginx:nginx /var/cache/nginx &&
+             /docker-entrypoint.sh nginx -g 'daemon off;'"
 
   # 阶段2：证书申请服务
   certbot:
