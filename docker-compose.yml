@@ -1,5 +1,5 @@
 # docker-compose.yml
-version: '3.8'
+version: '3'
 
 services:
   # 阶段1：临时Web服务（仅用于证书申请）
