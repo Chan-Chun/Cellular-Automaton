@@ -1,28 +1,44 @@
 # docker-compose.yml
-version: '3'
+version: '3.8'
 
 services:
+  # 阶段1：临时Web服务（仅用于证书申请）
+  temp-web:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - web-root:/var/www/html
+      - ./nginx-init.conf:/etc/nginx/nginx.conf
+    networks:
+      - app-network
+
+  # 阶段2：证书申请服务
+  certbot:
+    image: certbot/certbot
+    depends_on:
+      - temp-web
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - web-root:/var/www/html
+    command: certonly --webroot --webroot-path=/var/www/html --email 362732414@qq.com --agree-tos --no-eff-email -d ca.chanchun.net --staging
+    networks:
+      - app-network
+
+  # 阶段3：正式Web服务
   web:
     build: .
+    depends_on:
+      - certbot
     ports:
       - "80:80"
       - "443:443"
     volumes:
       - certbot-etc:/etc/letsencrypt
-      - certbot-var:/var/lib/letsencrypt
+      - web-root:/var/www/html
       - ./nginx.conf:/etc/nginx/nginx.conf
     networks:
       - app-network
-
-  certbot:
-    image: certbot/certbot
-    volumes:
-      - certbot-etc:/etc/letsencrypt
-      - certbot-var:/var/lib/letsencrypt
-      - web-root:/var/www/html
-    depends_on:
-      - web
-    command: certonly --webroot --webroot-path=/var/www/html --email 362732414@qq.com --agree-tos --no-eff-email -d ca.chanchun.net
 
 volumes:
   certbot-etc:

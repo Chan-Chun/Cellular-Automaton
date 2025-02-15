@@ -1,33 +1,22 @@
-# 使用官方 Node.js 镜像作为基础镜像
+# Dockerfile 优化版
 FROM node:14-alpine
 
-# 安装 Nginx
-RUN apk add --no-cache nginx
+# 安装依赖
+RUN apk add --no-cache nginx certbot && \
+    mkdir -p /var/www/html && \
+    addgroup -S www-data && \
+    adduser -S -G www-data -D www-data && \
+    chown -R www-data:www-data /var/www/html
 
-# 创建 www-data 用户和用户组（如果它们尚未存在）
-RUN getent group www-data || addgroup -S www-data && getent passwd www-data || adduser -S -G www-data www-data
+WORKDIR /app
 
-# 设置工作目录
-WORKDIR /usr/src/app
-
-# 复制 package.json 和 package-lock.json 文件到容器中
 COPY package*.json ./
+RUN npm install && npm install pm2 -g
 
-# 安装 Node.js 依赖
-RUN npm install
-
-# 安装 pm2
-RUN npm install pm2 -g
-
-# 复制应用源代码到容器中
 COPY . .
 
-# 复制 Nginx 配置文件到容器中
-COPY nginx.conf /etc/nginx/nginx.conf
+# 暴露端口
+EXPOSE 80 443
 
-# 暴露 80 和 443 端口
-EXPOSE 80
-EXPOSE 443
-
-# 启动 pm2 和 Nginx
-CMD pm2 start bin/www && nginx -g 'daemon off;'
+# 启动命令
+CMD ["sh", "-c", "pm2 start bin/www && nginx -g 'daemon off;'"]
