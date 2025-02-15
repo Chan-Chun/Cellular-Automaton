@@ -10,9 +10,10 @@ services:
     volumes:
       - web-root:/var/www/html
       - ./nginx-init.conf:/etc/nginx/nginx.conf
+      - nginx-cache:/var/cache/nginx  # 添加缓存目录
     networks:
       - app-network
-    user: "nginx:nginx"  # 显式指定用户
+    user: "nginx:nginx"
 
   # 阶段2：证书申请服务
   certbot:
@@ -42,9 +43,10 @@ services:
       - app-network
 
 volumes:
+  web-root:
   certbot-etc:
   certbot-var:
-  web-root:
+  nginx-cache:  # 新增缓存Volume
 
 networks:
   app-network:
