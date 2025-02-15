@@ -12,6 +12,7 @@ services:
       - ./nginx-init.conf:/etc/nginx/nginx.conf
     networks:
       - app-network
+    user: "nginx:nginx"  # 显式指定用户
 
   # 阶段2：证书申请服务
   certbot:
