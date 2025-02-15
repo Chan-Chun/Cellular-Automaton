@@ -24,7 +24,7 @@ services:
     volumes:
       - certbot-etc:/etc/letsencrypt
       - web-root:/var/www/html
-    command: certonly --webroot --webroot-path=/var/www/html --email 362732414@qq.com --agree-tos --no-eff-email -d ca.chanchun.net --staging
+    command: certonly --webroot --webroot-path=/var/www/html --email 362732414@qq.com --non-interactive --agree-tos --no-eff-email -d ca.chanchun.net --staging
     networks:
       - app-network
     restart: unless-stopped
