@@ -2,55 +2,45 @@
 version: '3'
 
 services:
-  # 阶段1：临时Web服务（仅用于证书申请）
-  temp-web:
+  # 阶段1：证书申请专用服务（临时占用80端口）
+  certbot-setup:
     image: nginx:alpine
     ports:
       - "80:80"
     volumes:
-      - web-root:/var/www/html
-      - ./nginx-init.conf:/etc/nginx/nginx.conf
-      - nginx-cache:/var/cache/nginx
-    networks:
-      - app-network
-    user: "root"  # 临时使用root用户
-    entrypoint: >
-      sh -c "mkdir -p /var/cache/nginx &&
-             chown -R nginx:nginx /var/cache/nginx &&
-             nginx -g 'daemon off;'"
-
-  # 阶段2：证书申请服务
-  certbot:
-    image: certbot/certbot
-    depends_on:
-      - temp-web
-    volumes:
+      - certbot-www:/usr/share/nginx/html
       - certbot-etc:/etc/letsencrypt
-      - web-root:/var/www/html
-    command: certonly --webroot --webroot-path=/var/www/html --email 362732414@qq.com --agree-tos --no-eff-email -d ca.chanchun.net --staging
+    command: >
+      sh -c "echo 'Starting temporary certbot setup...';
+             mkdir -p /usr/share/nginx/html/.well-known/acme-challenge;
+             nginx -g 'daemon off;' & 
+             sleep 5;
+             certbot certonly --webroot -w /usr/share/nginx/html -d ca.chanchun.net 
+               --email 362732414@qq.com --agree-tos --no-eff-email --staging;
+             kill %1;
+             echo 'Certbot setup completed'"
     networks:
       - app-network
 
-  # 阶段3：正式Web服务
+  # 阶段2：正式Web服务（使用证书）
   web:
     build: .
-    depends_on:
-      - certbot
     ports:
       - "80:80"
       - "443:443"
     volumes:
       - certbot-etc:/etc/letsencrypt
-      - web-root:/var/www/html
+      - certbot-www:/var/www/html
       - ./nginx.conf:/etc/nginx/nginx.conf
     networks:
       - app-network
+    depends_on:
+      - certbot-setup
+    restart: unless-stopped
 
 volumes:
-  web-root:
   certbot-etc:
-  certbot-var:
-  nginx-cache:  # 新增缓存Volume
+  certbot-www:
 
 networks:
   app-network:
