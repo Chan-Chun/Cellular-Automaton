@@ -32,8 +32,6 @@ services:
   # 阶段3：正式Web服务
   web:
     build: .
-    depends_on:
-      - certbot
     ports:
       - "80:80"
       - "443:443"
