@@ -28,9 +28,6 @@ services:
     networks:
       - app-network
     restart: unless-stopped
-    before_stop:
-      - { restart: certbot }
-      - { cmd: ["nginx", "-s", "-e", "exit"] }
 
   # 阶段3：正式Web服务
   web:
