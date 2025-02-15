@@ -10,13 +10,14 @@ services:
     volumes:
       - web-root:/var/www/html
       - ./nginx-init.conf:/etc/nginx/nginx.conf
-      - nginx-cache:/var/cache/nginx  # 添加缓存目录
+      - nginx-cache:/var/cache/nginx
     networks:
       - app-network
-    user: "nginx:nginx"
+    user: "root"  # 临时使用root用户
     entrypoint: >
-      sh -c "chown -R nginx:nginx /var/cache/nginx &&
-             /docker-entrypoint.sh nginx -g 'daemon off;'"
+      sh -c "mkdir -p /var/cache/nginx &&
+             chown -R nginx:nginx /var/cache/nginx &&
+             exec su-exec nginx /docker-entrypoint.sh nginx -g 'daemon off;'"
 
   # 阶段2：证书申请服务
   certbot:
