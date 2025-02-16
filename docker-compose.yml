@@ -19,8 +19,6 @@ services:
   # 阶段2：证书申请服务
   certbot:
     image: certbot/certbot
-    depends_on:
-      - temp-web
     volumes:
       - certbot-etc:/etc/letsencrypt
       - web-root:/var/www/html
