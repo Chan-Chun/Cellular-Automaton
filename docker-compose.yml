@@ -25,7 +25,6 @@ services:
     command: certonly --webroot --webroot-path=/var/www/html --email 362732414@qq.com --non-interactive --agree-tos --no-eff-email -d ca.chanchun.net --staging
     networks:
       - app-network
-    restart: unless-stopped
 
   # 阶段3：正式Web服务
   web:
